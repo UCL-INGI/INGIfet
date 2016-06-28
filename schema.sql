@@ -1,0 +1,15 @@
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY,
+    firstname VARCHAR(255) NOT NULL UNIQUE,
+    lastname VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    fgs CHARACTER(8) NOT NULL UNIQUE,
+    balance FLOAT DEFAULT 0
+);
+
+CREATE TABLE operation (
+    id INTEGER PRIMARY KEY,
+    user_id INT NOT NULL,
+    amount FLOAT NOT NULL,
+    date DATETIME NOT NULL
+);

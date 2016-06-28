@@ -1,0 +1,26 @@
+$def with (user, ops, form)
+
+<h1>Utilisateur « $user.firstname $user.lastname »</h1>
+
+<ul>
+    <li>$user.firstname $user.lastname</li>
+    <li>Solde : $float2str(user.balance) €</li>
+    <li>Adresse mail : $user.email</li>
+    <li>FGS : $user.fgs</li>
+</ul>
+
+<p><a href="/users/edit/$user.id">Éditer le profil</a></p>
+
+<h2>Ajouter des consommations</h2>
+
+<form method="post" action="/consume/$user.id">
+    $:form.render()
+</form>
+
+
+<h2>Historique</h2>
+
+<ul>
+$for op in ops:
+    <li>$datetime2str(op.date) : $float2str(op.amount) €</li>
+</ul>

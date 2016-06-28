@@ -1,0 +1,11 @@
+$def with (form, user)
+
+$if user:
+    <h1>Éditer le profil de « $user.firstname $user.lastname »</h1>
+    <form method="post" action="/users/edit/$user.id">
+$else:
+    <h1>Ajouter un nouvel utilisateur</h1>
+    <form method="post" action="/users/add">
+
+$:form.render()
+</form>

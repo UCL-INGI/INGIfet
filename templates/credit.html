@@ -1,0 +1,7 @@
+$def with (user, form)
+
+<h1>Créditer $user.firstname $user.lastname</h1>
+
+<form method="post" action="/credit/$user.id">
+    $:form.render()
+</form>

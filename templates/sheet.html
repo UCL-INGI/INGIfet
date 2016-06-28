@@ -1,0 +1,53 @@
+$def with (users)
+
+<html>
+
+<style>
+
+div.breakafter {
+  page-break-after: always;
+}
+
+.qrcode {
+   display: block-inline;
+   float: right;
+   width:40%;
+   height: 75px;
+}
+
+.other {
+   border:1px solid #000000;
+}
+
+center {
+    padding-bottom:10px;
+}
+</style>
+
+$code:
+	def chunks(l, n):
+		"""Yield successive n-sized chunks from l."""
+		for i in range(0, len(l), n):
+			yield l[i:i+n]
+
+
+$for page in chunks(users, 20):
+	<center>PRIX: Une collation 0,65&#8364; par pi&egrave;ce
+	<br>PRICE: &#8364; 0.65 per piece snack</center>
+	<table>
+	$for i,u in enumerate(page):
+		$if i%2 == 0:
+			<tr>
+		$else:
+			<td width=4%></td>
+		
+
+		<td width=8%>$u.firstname $u.lastname</td>
+
+		<td width=28% style="border:1px solid black">
+            <object class="qrcode" data="/qr/$u.id" type="image/svg+xml"></object>
+		</td>
+
+		$if i%2 != 0:
+			</tr>
+    </table>

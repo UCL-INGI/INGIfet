@@ -1,0 +1,14 @@
+$def with (users)
+
+<h1>INGIfet</h1>
+
+<h2>Utilisateurs</h2>
+
+<ul>
+$for user in users:
+    <li><a href="/users/$user.id">$user.firstname $user.lastname $float2str(user.balance) €</a> <a href="/credit/$user.id">Créditer</a></li>
+
+</ul>
+
+<p><a href="/users/add">Ajouter un utilisateur</a></p>
+
