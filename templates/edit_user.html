@@ -1,11 +1,20 @@
 $def with (form, user)
 
-$if user:
-    <h1>Éditer le profil de « $user.firstname $user.lastname »</h1>
-    <form method="post" action="/users/edit/$user.id">
-$else:
-    <h1>Ajouter un nouvel utilisateur</h1>
-    <form method="post" action="/users/add">
+<div class="content-box-header">
+    <div class="panel-title">
+    $if user:
+        Editer l'utilisateur « $user.firstname $user.lastname »
+    $else:
+        Ajouter un nouvel utilisateur
+    </div>
+</div>
 
-$:form.render()
-</form>
+<div class="content-box-large box-with-header">
+    $if user:
+        <form class="form" method="post" action="/users/edit/$user.id">
+    $else:
+        <form class="form" method="post" action="/users/add">
+
+    $:form.render()
+    </form>
+</div>

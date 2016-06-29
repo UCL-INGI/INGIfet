@@ -1,26 +1,34 @@
 $def with (user, ops, form)
 
-<h1>Utilisateur « $user.firstname $user.lastname »</h1>
+<div class="content-box-header">
+    <div class="panel-title">Utilisateur « $user.firstname $user.lastname »</div>
 
-<ul>
-    <li>$user.firstname $user.lastname</li>
-    <li>Solde : $float2str(user.balance) €</li>
-    <li>Adresse mail : $user.email</li>
-    <li>FGS : $user.fgs</li>
-</ul>
+    <div class="panel-options">
+        <a href="/users/edit/$user.id"><i class="glyphicon glyphicon-edit"></i> Éditer le profil</a>
+    </div>
+</div>
 
-<p><a href="/users/edit/$user.id">Éditer le profil</a></p>
+<div class="content-box-large box-with-header">
 
-<h2>Ajouter des consommations</h2>
+    <ul>
+        <li>$user.firstname $user.lastname</li>
+        <li>Solde : $float2str(user.balance) €</li>
+        <li>Adresse mail : $user.email</li>
+        <li>FGS : $user.fgs</li>
+        <li>RFID : $user.rfid</li>
+    </ul>
 
-<form method="post" action="/consume/$user.id">
-    $:form.render()
-</form>
+    <h2>Ajouter des consommations</h2>
+
+    <form method="post" action="/consume/$user.id">
+        $:form.render()
+    </form>
 
 
-<h2>Historique</h2>
+    <h2>Historique</h2>
 
-<ul>
-$for op in ops:
-    <li>$datetime2str(op.date) : $float2str(op.amount) €</li>
-</ul>
+    <ul>
+    $for op in ops:
+        <li>$datetime2str(op.date) : $float2str(op.amount) €</li>
+    </ul>
+</div>

@@ -1,0 +1,76 @@
+$def with (content)
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>INGIfet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"> 
+    <!-- Bootstrap -->
+    <link href="$urlize("static/css/bootstrap.min.css")" rel="stylesheet">
+    <!-- styles -->
+    <link href="$urlize("static/css/styles.css")" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  	<div class="header">
+	     <div class="container">
+	        <div class="row">
+	           <div class="col-md-3">
+	              <!-- Logo -->
+	              <div class="logo">
+                      <h1><a href="$urlize("/")"><i class="glyphicon glyphicon-glass"></i> INGIfet</a></h1>
+	              </div>
+	           </div>
+            </div>
+	     </div>
+	</div>
+
+    <div class="page-content">
+    	<div class="row">
+		  <div class="col-md-2">
+		  	<div class="sidebar content-box" style="display: block;">
+                <ul class="nav">
+                    <!-- Main menu -->
+                    <li><a href="$urlize("/")"><i class="glyphicon glyphicon-user"></i> Utilisateurs</a></li>
+                    <li><a href="$urlize("sheet")"><i class="glyphicon glyphicon-qrcode"></i> Imprimer feuille</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-pencil"></i> Templates mails</a></li>
+                </ul>
+             </div>
+		  </div>
+		  <div class="col-md-10">
+            <div class="row">
+		  		<div class="col-md-8">
+		  			<div class="row">
+		  				<div class="col-md-12">
+                            $:content
+                        </div>
+                    </div>
+                </div>
+            </div>
+		  </div>
+		</div>
+    </div>
+
+    <footer>
+         <div class="container">
+            <div class="copy text-center">
+               INGIfet
+            </div>
+            
+         </div>
+      </footer>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="$urlize("static/js/bootstrap.min.js")"></script>
+    <script src="$urlize("static/js/custom.js")"></script>
+  </body>
+</html>

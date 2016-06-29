@@ -4,7 +4,7 @@ import settings
 db = web.database(dbn='sqlite', db=settings.DB_FILE)
 
 TABLES = { #each table must have an 'id' column of type INTEGER AUTOINCREMENT
-    'user'  : ('id', 'firstname', 'lastname', 'email', 'fgs', 'balance'),
+    'user'  : ('id', 'firstname', 'lastname', 'email', 'fgs', 'balance', 'rfid'),
     'operation' : ('id', 'user_id', 'amount', 'date')
 }
 

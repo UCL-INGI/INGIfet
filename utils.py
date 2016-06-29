@@ -2,6 +2,11 @@
 
 import datetime, web, pyqrcode
 from models import Entry
+from settings import APP_URL
+import urllib.parse
+
+def urlize(uri):
+    return urllib.parse.urljoin(APP_URL, uri)
 
 def float2str(f):
     return "{:.2f}".format(f)
