@@ -9,11 +9,13 @@ def nfc_tag_connected(tag):
     try:
         response = urllib2.urlopen(BASE_URL.format(id=id))
         print("[{}] Request sent for {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id))
-        time.sleep(5)
+        print('\a') #beep
     except Exception as e:
         traceback.print_exc()
 
+    time.sleep(5)
 
-printf("[{}] Starting NFC tunnel ...".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+
+print("[{}] Starting NFC tunnel ...".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 while 1:
     clf.connect(rdwr={'on-connect': nfc_tag_connected})
