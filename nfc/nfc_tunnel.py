@@ -1,16 +1,27 @@
-import nfc, urllib2, binascii, traceback, datetime, time
+import nfc, urllib2, binascii, traceback, datetime, time, os
+from subprocess import call
 
 
 BASE_URL = 'http://localhost:8080/{id}'
 clf = nfc.ContactlessFrontend('usb')
+
+def beep(r=1):
+    call('beep -r {} -d 200 -f 800'.format(r))
 
 def nfc_tag_connected(tag):
     id = binascii.hexlify(tag.identifier)
     try:
         response = urllib2.urlopen(BASE_URL.format(id=id))
         print("[{}] Request sent for {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id))
-        print('\a') #beep
+        beep()
+    except urllib2.HTTPError as e:
+        if ev.code == 404:
+            beep(r=2)
+        else:
+            beep(r=3)
+            traceback.print_exc()
     except Exception as e:
+        beep(r=3)
         traceback.print_exc()
 
     time.sleep(5)
