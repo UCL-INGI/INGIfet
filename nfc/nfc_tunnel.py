@@ -1,4 +1,4 @@
-import nfc, urllib2, binascii, traceback, datetime, time, os
+import nfc, urllib2, binascii, traceback, datetime, time, os, shlex
 from subprocess import call
 
 
@@ -6,7 +6,8 @@ BASE_URL = 'http://localhost:8080/{id}'
 clf = nfc.ContactlessFrontend('usb')
 
 def beep(r=1):
-    call('beep -r {} -d 200 -f 800'.format(r))
+    cmd = 'beep -r {} -d 200 -f 800'.format(r)
+    call(shlex.split(cmd))
 
 def nfc_tag_connected(tag):
     id = binascii.hexlify(tag.identifier)

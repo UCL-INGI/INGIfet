@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ~/nfc/
 while true; do
-    python2 nfc_tunnel.py 2>&1 | tee NFC.log
+    python2 nfc_tunnel.py >> NFC.log 2>&1
 done
