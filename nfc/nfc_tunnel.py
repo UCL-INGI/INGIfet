@@ -16,7 +16,7 @@ def nfc_tag_connected(tag):
         print("[{}] Request sent for {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id))
         beep()
     except urllib2.HTTPError as e:
-        if ev.code == 404:
+        if e.code == 404:
             beep(r=2)
         else:
             beep(r=3)
