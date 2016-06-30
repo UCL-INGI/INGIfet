@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/nfc/
+cd ~/rfid/
 while true; do
-    python2 nfc_tunnel.py >> NFC.log 2>&1
+    python2 rfid_tunnel.py >> RFID.log 2>&1
 done
