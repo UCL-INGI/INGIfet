@@ -4,7 +4,7 @@ CREATE TABLE user (
     lastname VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     fgs CHARACTER(8) NOT NULL UNIQUE,
-    rfid CHARACTER(16) UNIQUE,
+    rfid CHARACTER(16),
     balance FLOAT DEFAULT 0
 );
 

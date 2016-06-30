@@ -1,6 +1,6 @@
 #coding: utf-8
 
-import datetime, web, pyqrcode
+import datetime, web, pyqrcode, pickle
 from models import Entry
 from settings import APP_URL
 import urllib.parse
@@ -21,5 +21,4 @@ def get_object_or_404(model, **kwargs):
 def datetime2str(dt):
     dt = datetime.datetime.strptime(dt, "%Y-%m-%d %H:%M:%S.%f") #TODO assez moche, dépend du résultat de SQLite..
     return dt.strftime('%d/%m/%y %H:%M')
-
 

@@ -1,3 +1,4 @@
+#coding: utf-8
 from web import form
 
 CreditForm = form.Form(
@@ -42,3 +43,12 @@ UserForm = form.Form(
 
 )
 
+TemplateForm = form.Form(
+    form.Textarea('template', form.notnull,
+        cols=50,
+        rows=10,
+        description="Template mail",
+    ),
+
+    form.Button('Envoyer'),
+)

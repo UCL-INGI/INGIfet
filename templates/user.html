@@ -18,14 +18,14 @@ $def with (user, ops, form)
         <li>RFID : $user.rfid</li>
     </ul>
 
-    <h2>Ajouter des consommations</h2>
+    <h3>Ajouter des consommations</h3>
 
     <form method="post" action="/consume/$user.id">
         $:form.render()
     </form>
 
 
-    <h2>Historique</h2>
+    <h3>Historique</h3>
 
     <ul>
     $for op in ops:

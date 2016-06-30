@@ -1,12 +1,21 @@
 #coding: utf-8
 
-import web, datetime, pyqrcode
+import web, datetime, pyqrcode, pickle
 from utils import datetime2str, get_object_or_404, float2str, urlize
 from io import BytesIO
 
-from settings import CONSUMPTION_UNIT, APP_URL
+import settings
 from models import User, Operation
-from forms import CreditForm, ConsumeInlineForm, ConsumeForm, UserForm
+from forms import CreditForm, ConsumeInlineForm, ConsumeForm, UserForm, TemplateForm
+
+web.config.debug = settings.DEBUG
+
+web.config.smtp_server = settings.SMTP_SERVER
+web.config.smtp_port = settings.SMTP_PORT
+web.config.smtp_username = settings.SMTP_USERNAME
+web.config.smtp_password = settings.SMTP_PASSWORD
+web.config.smtp_starttls = settings.SMTP_STARTTLS
+web.config.debug_level = True
 
 urls = (
     '/', 'users',
@@ -18,6 +27,9 @@ urls = (
     '/qr/(\d+)', 'qr',
     '/sheet', 'sheet',
     '/rfid/(\w+)', 'rfid',
+    '/mail/(\d+)', 'mail',
+    '/mail', 'mail',
+    '/mail/template', 'mail_tpl',
 )
 
 template_globals = {'datetime2str':datetime2str, 'float2str':float2str, 'urlize': urlize}
@@ -85,6 +97,14 @@ class credit:
         raise web.seeother('/')
 
 class consume:
+    def GET(self, id):
+        user = get_object_or_404(User, id=id)
+        form = ConsumeForm()
+
+        render = web.template.render('templates/', globals=template_globals)
+        return render.consume(form, user)
+
+
     def POST(self, id):
         user = get_object_or_404(User, id=id)
         form = ConsumeForm()
@@ -92,16 +112,20 @@ class consume:
         if not form.validates():
             raise web.seeother('/users/{}'.format(user.id))
 
-        amount = CONSUMPTION_UNIT*int(form.d.units)
+        amount = settings.CONSUMPTION_UNIT*int(form.d.units)
         Operation.new(user_id=id, amount=-amount, date=datetime.datetime.now()).save()
         user.balance -= float(amount)
         user.save()
 
-        raise web.seeother('/')
+        if b'userside' in web.data():
+            render = web.template.render('templates/', globals=template_globals)
+            return render.consume(None, user)
+        else:
+            raise web.seeother('/')
 
 class qr:
     def GET(self, id):
-        url = urlize(APP_URL, '/consume/{}'.format(id))
+        url = urlize('/consume/{}'.format(id))
 
         buf = BytesIO()
         qr = pyqrcode.create(url)
@@ -118,12 +142,61 @@ class sheet:
 class rfid:
     def GET(self, id):
         user = get_object_or_404(User, rfid=id)
-        amount = CONSUMPTION_UNIT
+        amount = settings.CONSUMPTION_UNIT
         Operation.new(user_id=id, amount=-amount, date=datetime.datetime.now()).save()
         user.balance -= float(amount)
         user.save()
 
         return "OK"
+
+class mail:
+    def GET(self, id=None):
+        #if id is None, email everyone with their balance
+
+        if id is not None:
+            users = [get_object_or_404(User, id=id)]
+        else:
+            users = User.all()
+
+        try:
+            f = open(settings.MAIL_FILE_TEMPLATE, 'rb')
+            tpl = pickle.load(f)
+            f.close()
+        except (IOError, pickle.PickleError):
+            tpl = settings.MAIL_DEFAULT_TEMPLATE
+
+        for u in users:
+            body = tpl.format(solde = u.balance)
+
+            web.sendmail(settings.MAIL_ADDRESS, u.email, 'Solde de votre compte cafétaria INGI', body)
+
+        raise web.seeother('/')
+
+
+class mail_tpl:
+    def GET(self):
+        try:
+            f = open(settings.MAIL_FILE_TEMPLATE, 'rb')
+            tpl = pickle.load(f)
+            f.close()
+        except (IOError, pickle.PickleError):
+            tpl = settings.MAIL_DEFAULT_TEMPLATE
+
+        form = TemplateForm()
+        form.fill(template=tpl)
+        return render.mail_tpl(form)
+
+    def POST(self):
+        form = TemplateForm()
+        if not form.validates():
+            return render.mail_tpl(form)
+
+        f = open(settings.MAIL_FILE_TEMPLATE, 'wb')
+        pickle.dump(form.d.template, f)
+        f.close()
+
+        raise web.seeother('/mail/template')
+
 
 
 if __name__ == "__main__":

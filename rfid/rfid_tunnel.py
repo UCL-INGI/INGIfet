@@ -28,6 +28,6 @@ def nfc_tag_connected(tag):
     time.sleep(5)
 
 
-print("[{}] Starting NFC tunnel ...".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+print("[{}] Starting RFID tunnel ...".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 while 1:
     clf.connect(rdwr={'on-connect': nfc_tag_connected})

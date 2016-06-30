@@ -5,6 +5,8 @@ $def with (users, credit_form, consume_form)
 
     <div class="panel-options">
         <a href="/users/add"><i class="glyphicon glyphicon-plus"></i> Ajouter un utilisateur</a>
+        &nbsp;
+        <a href="/mail"><i class="glyphicon glyphicon-envelope"></i> Envoyer le solde à tous les utilisateurs</a>
     </div>
 </div>
 
@@ -17,6 +19,7 @@ $def with (users, credit_form, consume_form)
                 <td>Solde</td>
                 <td>Ajouter des consommations</td>
                 <td>Ajouter du crédit</td>
+                <td>Envoyer solde par mail</td>
             </tr>
         </thead>
         <tbody>
@@ -26,13 +29,16 @@ $def with (users, credit_form, consume_form)
                 <td>$float2str(user.balance) €</td>
                 <td>
                     <form class="form-inline" method="post" action="/consume/$user.id">
-                        Nombre : $:consume_form.units.render()  <input type="button" value="Envoyer"/>
+                        Nombre : $:consume_form.units.render()  <input type="submit" value="Envoyer"/>
                     </form>
                 </td>
                 <td>
                     <form class="form-inline" method="post" action="/credit/$user.id">
-                        Montant : $:credit_form.amount.render() € <input type="button" value="Créditer"/>
+                        Montant : $:credit_form.amount.render() € <input type="submit" value="Créditer"/>
                     </form>
+                </td>
+                <td>
+                    <a href="/mail/$user.id"><i class="glyphicon glyphicon-envelope"></i> Envoyer</a>
                 </td>
             </tr>
         </tbody>

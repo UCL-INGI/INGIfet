@@ -1,0 +1,18 @@
+$def with (form)
+
+<div class="content-box-header">
+    <div class="panel-title">
+        Modifier le template de mail
+    </div>
+</div>
+
+<div class="content-box-large box-with-header">
+    <p>
+        Vous pouvez modifier le mail envoyé aux utilisateurs.
+        <br/><br/>
+        <strong>Attention :</strong> le template doit contenir la balise "{solde}" qui représente la valeur numérique du solde actuel de l'utilisateur.
+    </p>
+    <form class="form" method="post" action="/mail/template">
+        $:form.render()
+    </form>
+</div>
