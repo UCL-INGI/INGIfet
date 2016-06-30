@@ -1,4 +1,4 @@
-$def with (user, ops, form)
+$def with (user, ops)
 
 <div class="content-box-header">
     <div class="panel-title">Utilisateur « $user.firstname $user.lastname »</div>
@@ -14,16 +14,21 @@ $def with (user, ops, form)
         <li>$user.firstname $user.lastname</li>
         <li>Solde : $float2str(user.balance) €</li>
         <li>Adresse mail : $user.email</li>
-        <li>FGS : $user.fgs</li>
-        <li>RFID : $user.rfid</li>
+        <li>
+            Utilisateur actif :
+            $if user.active: 
+                oui 
+            $else:
+                non
+        </li>
+        <li>
+            RFID :
+            $if user.rfid:
+                $user.rfid
+            $else:
+                Aucun
+        </li>
     </ul>
-
-    <h3>Ajouter des consommations</h3>
-
-    <form method="post" action="/consume/$user.id">
-        $:form.render()
-    </form>
-
 
     <h3>Historique</h3>
 

@@ -3,7 +3,7 @@ CREATE TABLE user (
     firstname VARCHAR(255) NOT NULL UNIQUE,
     lastname VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
-    fgs CHARACTER(8) NOT NULL UNIQUE,
+    active INTEGER DEFAULT 1,
     rfid CHARACTER(16),
     balance FLOAT DEFAULT 0
 );

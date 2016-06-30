@@ -5,7 +5,7 @@ from utils import datetime2str, get_object_or_404, float2str, urlize
 from io import BytesIO
 
 import settings
-from models import User, Operation
+from models import User, Operation, Entry
 from forms import CreditForm, ConsumeInlineForm, ConsumeForm, UserForm, TemplateForm
 
 web.config.debug = settings.DEBUG
@@ -38,16 +38,16 @@ render = web.template.render('templates/', globals=template_globals, base='base'
 
 class users:
     def GET(self):
-        users = User.all()
-        return render.users(users, CreditForm(), ConsumeInlineForm())
+        active_users = User.filter(active=True)
+        inactive_users = User.filter(active=False)
+        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm())
 
 class user:
     def GET(self, id):
         user = get_object_or_404(User, id=id)
         operations = Operation.filter(user_id=id, order_by='date DESC')
-        form = ConsumeForm()
 
-        return render.user(user, operations, form)
+        return render.user(user, operations)
 
 class edit_user:
     def GET(self, id=None):
@@ -56,7 +56,7 @@ class edit_user:
         user = None
         if id is not None:
             user = get_object_or_404(User, id=id)
-            form.fill(firstname=user.firstname, lastname=user.lastname, email=user.email, fgs=user.fgs, rfid=user.rfid)
+            form.fill(firstname=user.firstname, lastname=user.lastname, email=user.email, rfid=user.rfid, active=user.active)
 
         return render.edit_user(form, user)
 
@@ -76,7 +76,7 @@ class edit_user:
         user.firstname = form.d.firstname
         user.lastname = form.d.lastname
         user.email = form.d.email
-        user.fgs = form.d.fgs
+        user.active = form.d.active
         user.rfid = form.d.rfid
         user.save()
 
@@ -135,28 +135,39 @@ class qr:
 
 class sheet:
     def GET(self):
-        users = User.all()
+        users = User.filter(active=True)
         return web.template.render('templates/', globals=template_globals).sheet(users)
 
 
 class rfid:
     def GET(self, id):
-        user = get_object_or_404(User, rfid=id)
-        amount = settings.CONSUMPTION_UNIT
-        Operation.new(user_id=user.id, amount=-amount, date=datetime.datetime.now()).save()
-        user.balance -= float(amount)
-        user.save()
+        try:
+            user = User.get(rfid=id)
+            amount = settings.CONSUMPTION_UNIT
+            Operation.new(user_id=user.id, amount=-amount, date=datetime.datetime.now()).save()
+            user.balance -= float(amount)
+            user.save()
 
-        return "OK"
+            return "OK"
+        except Entry.DoesNotExist:
+            body = settings.MAIL_TPL_UNKNOWN_CARD.format(card_id=id, hour=datetime.datetime.now().strftime('%H:%M'))
+
+            web.sendmail(settings.MAIL_ADDRESS,
+                settings.SECRETARY_MAIL_ADDRESS,
+                '[INGIfet] Carte inconnue {}'.format(id),
+                body)
+
+            raise web.notfound()
+
 
 class mail:
     def GET(self, id=None):
-        #if id is None, email everyone with their balance
+        #if id is None, email every active user with his balance
 
         if id is not None:
             users = [get_object_or_404(User, id=id)]
         else:
-            users = User.all()
+            users = User.filter(active=True)
 
         try:
             f = open(settings.MAIL_FILE_TEMPLATE, 'rb')

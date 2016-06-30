@@ -1,4 +1,4 @@
-$def with (users, credit_form, consume_form)
+$def with (active_users, inactive_users, credit_form, consume_form)
 
 <div class="content-box-header">
     <div class="panel-title">Utilisateurs</div>
@@ -6,12 +6,13 @@ $def with (users, credit_form, consume_form)
     <div class="panel-options">
         <a href="/users/add"><i class="glyphicon glyphicon-plus"></i> Ajouter un utilisateur</a>
         &nbsp;
-        <a href="/mail"><i class="glyphicon glyphicon-envelope"></i> Envoyer le solde à tous les utilisateurs</a>
+        <a href="/mail"><i class="glyphicon glyphicon-envelope"></i> Envoyer le solde à tous les utilisateurs actifs</a>
     </div>
 </div>
 
 <div class="content-box-large box-with-header">
 
+    <h4>Utilisateurs actifs</h4>
     <table class="table">
         <thead>
             <tr>
@@ -23,7 +24,7 @@ $def with (users, credit_form, consume_form)
             </tr>
         </thead>
         <tbody>
-        $for user in users:
+        $for user in active_users:
             <tr>
                 <td><a href="/users/$user.id">$user.firstname $user.lastname </a></th>
                 <td>$float2str(user.balance) €</td>
@@ -43,5 +44,39 @@ $def with (users, credit_form, consume_form)
             </tr>
         </tbody>
     </table>
+
+    <h4>Utilisateurs inactifs</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Nom</td>
+                <td>Solde</td>
+                <td>Ajouter des consommations</td>
+                <td>Ajouter du crédit</td>
+                <td>Envoyer solde par mail</td>
+            </tr>
+        </thead>
+        <tbody>
+        $for user in inactive_users:
+            <tr>
+                <td><a href="/users/$user.id">$user.firstname $user.lastname </a></th>
+                <td>$float2str(user.balance) €</td>
+                <td>
+                    <form class="form-inline" method="post" action="/consume/$user.id">
+                        Nombre : $:consume_form.units.render()  <input type="submit" value="Envoyer"/>
+                    </form>
+                </td>
+                <td>
+                    <form class="form-inline" method="post" action="/credit/$user.id">
+                        Montant : $:credit_form.amount.render() € <input type="submit" value="Créditer"/>
+                    </form>
+                </td>
+                <td>
+                    <a href="/mail/$user.id"><i class="glyphicon glyphicon-envelope"></i> Envoyer</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 
 </div>
