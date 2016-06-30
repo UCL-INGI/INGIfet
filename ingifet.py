@@ -143,7 +143,7 @@ class rfid:
     def GET(self, id):
         user = get_object_or_404(User, rfid=id)
         amount = settings.CONSUMPTION_UNIT
-        Operation.new(user_id=id, amount=-amount, date=datetime.datetime.now()).save()
+        Operation.new(user_id=user.id, amount=-amount, date=datetime.datetime.now()).save()
         user.balance -= float(amount)
         user.save()
 
