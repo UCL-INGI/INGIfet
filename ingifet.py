@@ -129,7 +129,7 @@ class qr:
 
         buf = BytesIO()
         qr = pyqrcode.create(url)
-        qr.svg(buf, scale=1.6)
+        qr.svg(buf, scale=1.5)
 
         return buf.getvalue()
 
