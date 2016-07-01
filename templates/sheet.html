@@ -10,9 +10,16 @@ div.breakafter {
 
 .qrcode {
    display: block-inline;
-   float: right;
    width:40%;
    height: 75px;
+}
+
+.qr-right {
+   float: right;
+}
+
+.qr-left {
+   float: left;
 }
 
 .other {
@@ -35,19 +42,25 @@ $for page in chunks(users, 20):
 	<center>PRIX: Une collation 0,65&#8364; par pi&egrave;ce
 	<br>PRICE: &#8364; 0.65 per piece snack</center>
 	<table>
-	$for i,u in enumerate(page):
-		$if i%2 == 0:
-			<tr>
-		$else:
-			<td width=4%></td>
-		
+    $for j, line in enumerate(chunks(page, 2)):
+        $for i,u in enumerate(line):
+            $if i%2 == 0:
+                <tr>
+            $else:
+                <td width=4%></td>
+            
+            $code:
+                if j%2 == 0:
+                    cl = "qr-left"
+                else:
+                    cl = "qr-right"
 
-		<td width=8%>$u.firstname $u.lastname</td>
+            <td width=8%>$u.firstname $u.lastname</td>
 
-		<td width=28% style="border:1px solid black">
-            <object class="qrcode" data="/qr/$u.id" type="image/svg+xml"></object>
-		</td>
+            <td width=28% style="border:1px solid black">
+                <object class="qrcode $cl" data="/qr/$u.id" type="image/svg+xml"></object>
+            </td>
 
-		$if i%2 != 0:
-			</tr>
+            $if i%2 != 0:
+                </tr>
     </table>

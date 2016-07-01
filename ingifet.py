@@ -178,7 +178,6 @@ class rfid:
                     existing_user_url = urlize('/users/rfid/{}'.format(id)),
                     hour=datetime.datetime.now().strftime('%H:%M'))
 
-            print(body)
             web.sendmail(settings.MAIL_ADDRESS,
                 settings.SECRETARY_MAIL_ADDRESS,
                 '[INGIfet] Carte inconnue {}'.format(id),
