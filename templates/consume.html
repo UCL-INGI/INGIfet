@@ -40,20 +40,25 @@ $def with (form, user)
 
                     <div class="content-box-header">
                         <div class="panel-title">
-                            Ajouter des consommations à « $user.firstname $user.lastname »
+                            Add consumptions to « $user.firstname $user.lastname »
+                        </div>
+
+
+                        <div class="panel-options">
+                            <a href="/mail"><i class="glyphicon glyphicon-envelope"></i> <a href="$:urlize("/mail/"+str(user.id)+"?u=1")">Send me my balance</a>
                         </div>
                     </div>
 
                     <div class="content-box-large box-with-header">
-                        $if form:
+                        $if form == "BALANCE":
+                            <p>Your balance has been sent to your mailbox.</p>
+                        $elif form:
                             <form method="post" action="/consume/$user.id">
                                 $:form.render()
                                 <input type="hidden" name="userside" value="1"/>
                             </form>
                         $else:
-                            <p>Votre consommation a bien été comptabilisée.</p>
-
-                        <p>Votre solde est de $float2str(user.balance) €.</p>
+                            <p>Your consumption has been saved.</p>
                     </div>
                 </div>
             </div>

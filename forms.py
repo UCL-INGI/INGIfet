@@ -1,5 +1,6 @@
 #coding: utf-8
 from web import form
+from models import User
 
 CreditForm = form.Form(
     form.Textbox('amount', form.notnull, 
@@ -50,3 +51,13 @@ TemplateForm = form.Form(
 
     form.Button('Envoyer'),
 )
+
+def UserSelectForm(users):
+    return form.Form(
+        form.Dropdown('user',
+            [(u.id, "{} {}".format(u.firstname, u.lastname)) for u in users],
+            description="Utilisateur"
+        ),
+
+        form.Button('Envoyer'),
+    )

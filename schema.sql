@@ -1,7 +1,7 @@
 CREATE TABLE user (
     id INTEGER PRIMARY KEY,
-    firstname VARCHAR(255) NOT NULL UNIQUE,
-    lastname VARCHAR(255) NOT NULL UNIQUE,
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     active INTEGER DEFAULT 1,
     rfid CHARACTER(16),

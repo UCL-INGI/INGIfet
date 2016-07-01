@@ -6,7 +6,7 @@ from io import BytesIO
 
 import settings
 from models import User, Operation, Entry
-from forms import CreditForm, ConsumeInlineForm, ConsumeForm, UserForm, TemplateForm
+from forms import CreditForm, ConsumeInlineForm, ConsumeForm, UserForm, TemplateForm, UserSelectForm
 
 web.config.debug = settings.DEBUG
 
@@ -22,6 +22,7 @@ urls = (
     '/users/(\d+)', 'user',
     '/users/add', 'edit_user',
     '/users/edit/(\d+)', 'edit_user',
+    '/users/rfid/(\w+)', 'user_rfid',
     '/credit/(\d+)', 'credit',
     '/consume/(\d+)', 'consume',
     '/qr/(\d+)', 'qr',
@@ -32,14 +33,14 @@ urls = (
     '/mail/template', 'mail_tpl',
 )
 
-template_globals = {'datetime2str':datetime2str, 'float2str':float2str, 'urlize': urlize}
+template_globals = {'datetime2str':datetime2str, 'float2str':float2str, 'urlize': urlize, 'str': str}
 
 render = web.template.render('templates/', globals=template_globals, base='base')
 
 class users:
     def GET(self):
-        active_users = User.filter(active=True)
-        inactive_users = User.filter(active=False)
+        active_users = User.filter(active=True, order_by='firstname')
+        inactive_users = User.filter(active=False, order_by='firstname')
         return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm())
 
 class user:
@@ -54,9 +55,12 @@ class edit_user:
         form = UserForm()
 
         user = None
+        rfid = web.input(rfid=None).rfid
         if id is not None:
             user = get_object_or_404(User, id=id)
             form.fill(firstname=user.firstname, lastname=user.lastname, email=user.email, rfid=user.rfid, active=user.active)
+        elif rfid:
+            form.fill(rfid=rfid)
 
         return render.edit_user(form, user)
 
@@ -81,6 +85,25 @@ class edit_user:
         user.save()
 
         raise web.seeother('/users/{}'.format(user.id))
+
+class user_rfid:
+    def GET(self, rfid):
+        form = UserSelectForm(User.all())()
+
+        return render.user_rfid(form, rfid)
+
+    def POST(self, rfid):
+        form = UserSelectForm(User.all())()
+
+        if form.validates():
+            user_id = form.d.user
+            user = get_object_or_404(User, id=user_id)
+            user.rfid = rfid
+            user.save()
+
+            raise web.seeother('/')
+
+        return render.user_rfid(form, rfid)
 
 class credit:
     def POST(self, id):
@@ -150,8 +173,12 @@ class rfid:
 
             return "OK"
         except Entry.DoesNotExist:
-            body = settings.MAIL_TPL_UNKNOWN_CARD.format(card_id=id, hour=datetime.datetime.now().strftime('%H:%M'))
+            body = settings.MAIL_TPL_UNKNOWN_CARD.format(
+                    new_user_url = urlize('/users/add/?rfid={}'.format(id)),
+                    existing_user_url = urlize('/users/rfid/{}'.format(id)),
+                    hour=datetime.datetime.now().strftime('%H:%M'))
 
+            print(body)
             web.sendmail(settings.MAIL_ADDRESS,
                 settings.SECRETARY_MAIL_ADDRESS,
                 '[INGIfet] Carte inconnue {}'.format(id),
@@ -177,12 +204,16 @@ class mail:
             tpl = settings.MAIL_DEFAULT_TEMPLATE
 
         for u in users:
-            body = tpl.format(solde = u.balance)
+            body = tpl.format(solde = u.balance, prenom = u.firstname, nom = u.lastname)
 
-            web.sendmail(settings.MAIL_ADDRESS, u.email, 'Solde de votre compte cafétaria INGI', body)
+            web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
+
+        userside = web.input(u=0).u != 0
+        if userside:
+            render = web.template.render('templates/', globals=template_globals)
+            return render.consume('BALANCE', u)
 
         raise web.seeother('/')
-
 
 class mail_tpl:
     def GET(self):
