@@ -1,0 +1,13 @@
+$def with (form, rfid)
+
+<div class="content-box-header">
+    <div class="panel-title">
+        Associer une carte à un utilisateur existant
+    </div>
+</div>
+
+<div class="content-box-large box-with-header">
+    <form class="form" method="post" action="/users/rfid/$rfid">
+        $:form.render()
+    </form>
+</div>
