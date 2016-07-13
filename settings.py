@@ -1,0 +1,54 @@
+#coding: utf-8
+import web
+
+DEBUG = True
+
+DB_FILE = "ingifet.db"
+
+CONSUMPTION_UNIT = 0.65 #en euros
+
+APP_URL = "https://cafet.example.com"
+
+MAIL_ADDRESS = "cafet@example.com"
+
+MAIL_FILE_TEMPLATE = "mail_tpl.pickle"
+
+MAIL_DEFAULT_TEMPLATE = """
+Bonjour {prenom},
+
+Ce mois-ci, votre solde à la cafétéria INGI est désormais de {solde} €.
+
+--
+Hello {prenom},
+
+This month your INGI cafetaria balance is {solde} €.
+
+Regards,
+
+
+The INGI Cafet bot
+"""
+
+SECRETARY_MAIL_ADDRESS = "secretaire@example.com"
+
+MAIL_TPL_UNKNOWN_CARD = """
+Bonjour,
+
+Un employé a scanné sa carte d'accès à {hour} mais elle n'est pas reprise dans la base de données.
+Vous pouvez associer cette carte à :
+    - <a href="{new_user_url}">Un nouvel utilisateur</a>
+    - <a href="{existing_user_url}">Un utilisateur existant</a>
+
+En vous souhaitant une rayonnante journée,
+
+
+The INGI Cafet bot.
+"""
+
+SMTP_SERVER = "localhost"
+SMTP_PORT = 25
+SMTP_USERNAME = ""
+SMTP_PASSWORD = ""
+SMTP_STARTTLS = False
+
+
