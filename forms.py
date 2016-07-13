@@ -44,8 +44,8 @@ UserForm = form.Form(
 
 TemplateForm = form.Form(
     form.Textarea('template', form.notnull,
-        cols=50,
-        rows=10,
+        cols=150,
+        rows=30,
         description="Template mail",
     ),
 

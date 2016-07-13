@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #coding: utf-8
 
 import web, datetime, pyqrcode, pickle
@@ -158,7 +159,7 @@ class qr:
 
 class sheet:
     def GET(self):
-        users = User.filter(active=True)
+        users = User.filter(active=True, order_by='firstname')
         return web.template.render('templates/', globals=template_globals).sheet(users)
 
 
@@ -189,25 +190,32 @@ class rfid:
 class mail:
     def GET(self, id=None):
         #if id is None, email every active user with his balance
-
         if id is not None:
             users = [get_object_or_404(User, id=id)]
         else:
             users = User.filter(active=True)
 
+        default_tpl = settings.MAIL_DEFAULT_TEMPLATE
         try:
             f = open(settings.MAIL_FILE_TEMPLATE, 'rb')
             tpl = pickle.load(f)
             f.close()
         except (IOError, pickle.PickleError):
-            tpl = settings.MAIL_DEFAULT_TEMPLATE
+            tpl = default_tpl
 
+        userside = web.input(u=0).u != 0 # used to check if the mail is coming from a QR scan
         for u in users:
-            body = tpl.format(solde = u.balance, prenom = u.firstname, nom = u.lastname)
+            utpl = default_tpl
+            if u.balance < 0 and not userside:
+                utpl = tpl
+            
+            body = utpl.format(apayer = float2str(-u.balance if u.balance <0 else 0), 
+                               solde = float2str(u.balance), 
+                               prenom = u.firstname, 
+                               nom = u.lastname)
 
             web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
 
-        userside = web.input(u=0).u != 0
         if userside:
             render = web.template.render('templates/', globals=template_globals)
             return render.consume('BALANCE', u)

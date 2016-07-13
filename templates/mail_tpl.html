@@ -10,7 +10,7 @@ $def with (form)
     <p>
         Vous pouvez modifier le mail envoyé aux utilisateurs.
         <br/><br/>
-        <strong>Attention :</strong> le template doit contenir la balise "{solde}" qui représente la valeur numérique du solde actuel de l'utilisateur, et les balises "{prenom}" et "{nom}" qui permettent d'indiquer le nom de l'utilisateur..
+        <strong>Attention :</strong> le template peut contenir la balise "{apayer}" qui représente le montant à payer pour se mettre en ordre auprès de la cafet', la balise "{solde}" qui représente la valeur numérique du solde actuel de l'utilisateur, et les balises "{prenom}" et "{nom}" qui permettent d'indiquer le nom de l'utilisateur.
     </p>
     <form class="form" method="post" action="/mail/template">
         $:form.render()

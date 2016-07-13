@@ -95,7 +95,7 @@ class Entry(object):
 
     def save(self):
         if self._created:
-            print(self._data)
+            #print(self._data)
             db.update(self.model.table_name, where={'id':self.id}, **self._data)
         else:
             d = self._data.copy()
