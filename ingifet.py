@@ -37,6 +37,7 @@ urls = (
 template_globals = {'datetime2str':datetime2str, 'float2str':float2str, 'urlize': urlize, 'str': str}
 
 render = web.template.render('templates/', globals=template_globals, base='base')
+render_no_layout = web.template.render('templates/', globals=template_globals)
 
 class users:
     def GET(self):
@@ -125,8 +126,7 @@ class consume:
         user = get_object_or_404(User, id=id)
         form = ConsumeForm()
 
-        render = web.template.render('templates/', globals=template_globals)
-        return render.consume(form, user)
+        return render_no_layout.consume(form, user)
 
 
     def POST(self, id):
@@ -142,8 +142,7 @@ class consume:
         user.save()
 
         if b'userside' in web.data():
-            render = web.template.render('templates/', globals=template_globals)
-            return render.consume(None, user)
+            return render_no_layout.consume(None, user)
         else:
             raise web.seeother('/')
 
@@ -217,8 +216,7 @@ class mail:
             web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
 
         if userside:
-            render = web.template.render('templates/', globals=template_globals)
-            return render.consume('BALANCE', u)
+            return render_no_layout.consume('BALANCE', u)
 
         raise web.seeother('/')
 
