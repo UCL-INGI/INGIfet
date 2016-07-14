@@ -650,3 +650,7 @@ body {
       border-radius:10px;
    }  
 }
+
+.clear-both {
+    clear:both;
+}
