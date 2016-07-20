@@ -125,37 +125,3 @@ if __name__ == '__main__':
     queries = [x+";" for x in schema.split(";")]
     for q in queries:
         db.query(q)
-
-    User.new(firstname="Jean", lastname="Bond", fgs="007", email="jean@bond.co.uk").save()
-    User.new(firstname="Marco", lastname="Polo", fgs="1234", email="marco@polo.it").save()
-    u = User.new(firstname="Mathieu", lastname="Xhonneux", fgs="42", email="foo@bar.net")
-    u.save()
-
-    assert u.id == 3
-    assert u.firstname == "Mathieu"
-
-    users = User.all()
-    assert len(users) == 3
-
-    Operation.new(user_id=u.id, amount=13.37, date=datetime.datetime.now()).save()
-    Operation.new(user_id=1, amount=9.41, date=datetime.datetime.now()).save()
-    op = Operation.new(user_id=u.id, amount=1.51, date=datetime.datetime.now())
-    op.save()
-
-    ops = Operation.filter(user_id=u.id)
-    assert len(ops) == 2
-    assert Operation.get(user_id=1).amount == 9.41
-
-    op.user_id = 2
-    op.save()
-    assert Operation.get(user_id=2).id == op.id
-
-    u.update(firstname="James", lastname="LeBron")
-    assert User.get(firstname="James").lastname == "LeBron"
-
-    u.delete()
-    try:
-        User.get(firstname="James")
-        raise False
-    except Entry.DoesNotExist:
-        pass
