@@ -1,7 +1,7 @@
 # INGIfet
 Cafet INGI management
 
-## Installation (OsX)
+## Installation (Linux, OsX, and presumably other unices)
 
 1. Install the version of webpy compatible with Python3.
   1. Clone the `webpy/webpy` repository
