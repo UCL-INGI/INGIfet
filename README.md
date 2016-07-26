@@ -20,6 +20,6 @@ At this point, the best option is probably to use a virtualenv to run the applic
 
 ## Installation on a webserver
 
-Currently the application has only been deployed on Apache as a (F-)CGI script using Flup6 as middleware to implement the WSGI gateway interface. A more effective installation shold be possible with a python3 compatible version of mod_wsgi.
+Currently the application has only been deployed on Apache as a (F-)CGI script using Flup6 as middleware to implement the WSGI gateway interface. A more effective installation should be possible with a python3 compatible version of mod_wsgi.
 
 Deployments using NGnix or Lighttpd have not been tested yet.
