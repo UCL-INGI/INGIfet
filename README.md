@@ -1,6 +1,14 @@
 # INGIfet
 Cafet INGI management
 
+This software is meant to provide simple means to handle candy and beverage intakes in the INGI cafet.
+First and foremost, this is a system based on honor. The previous system was simply a paper sheet where
+you draw a stick in front of your name when taking something in the fridge. This software is meant to
+replace this by provinding the same basic features and easing the accounting workload. The security
+is thus **not** that important right now. For example, it is easy to reproduce a user RFID tag, but we
+don't care (for now), as it is even easier to draw a stick in front of someone else name (or to not draw
+a stick at all).
+
 ## Standalone installation (Linux, OsX, and presumably other unices)
 
 1. Install the version of webpy compatible with Python3.
