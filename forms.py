@@ -56,7 +56,7 @@ TemplateForm = form.Form(
 def UserSelectForm(users):
     return form.Form(
         form.Dropdown('user',
-            [(u.id, "{} {}".format(u.firstname, u.lastname)) for u in users].sort(key=itemgetter(1)),
+            sorted([(u.id, "{} {}".format(u.firstname, u.lastname)) for u in users], key=itemgetter(1)),
             description="Utilisateur"
         ),
 
