@@ -21,7 +21,7 @@ web.config.debug_level = True
 urls = (
     '/', 'users',
     '/users/(\d+)', 'user',
-    '/users/add', 'edit_user',
+    '/users/add/?', 'edit_user',
     '/users/edit/(\d+)', 'edit_user',
     '/users/rfid/(\w+)', 'user_rfid',
     '/credit/(\d+)', 'credit',
