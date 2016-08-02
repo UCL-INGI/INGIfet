@@ -90,7 +90,7 @@ class edit_user:
 
 class user_rfid:
     def GET(self, rfid):
-        form = UserSelectForm(User.all())()
+        form = UserSelectForm(User.all(order_by='firstname'))()
 
         return render.user_rfid(form, rfid)
 
