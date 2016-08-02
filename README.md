@@ -16,12 +16,14 @@ a stick at all).
    `pip install web.py==0.40.dev0`
 
 2. Configure the application
-  1. Copy settings.py.example to settings.py
+  1. Copy `settings.py.example` to `settings.py`
   2. Update the settings accordingly
 3. Init the database
-  1. python3 models.py
+
+  `python3 models.py`
+  
 4. Export LANG
-  1. `export LANG=en_GB.UTF-8` otherwise you might have issue while decoding strings.
+  `export LANG=en_GB.UTF-8` otherwise you might have issue while decoding strings.
 
 At this point, the best option is probably to use a virtualenv to run the application, so that you can install the py3 branch of webpy and install dedicated packages like pyqrcode.
 
