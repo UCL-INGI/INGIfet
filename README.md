@@ -11,11 +11,10 @@ a stick at all).
 
 ## Standalone installation (Linux, OsX, and presumably other unices)
 
-1. Install the version of webpy compatible with Python3.
-  1. Clone the `webpy/webpy` repository
-  2. Switch to the branch `py3`
-  3. Install it using `setup.py` or ensure that `PYTHONPATH` contains the path to the folder.
-  4. Install or upgrade pyqrcode to a working Python3 version
+1. Install the version of webpy compatible with Python3 :
+  
+   `pip install web.py==0.40.dev0`
+
 2. Configure the application
   1. Copy settings.py.example to settings.py
   2. Update the settings accordingly
