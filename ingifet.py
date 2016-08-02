@@ -95,8 +95,8 @@ class user_rfid:
         return render.user_rfid(form, rfid)
 
     def POST(self, rfid):
-        form = UserSelectForm(User.all())()
-
+        form = UserSelectForm(User.all(order_by='firstname'))()
+ 
         if form.validates():
             user_id = form.d.user
             user = get_object_or_404(User, id=user_id)
