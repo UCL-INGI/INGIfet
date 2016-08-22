@@ -1,4 +1,4 @@
-$def with (form, user)
+$def with (form, user, str)
 
 <div class="content-box-header">
     <div class="panel-title">
@@ -8,6 +8,10 @@ $def with (form, user)
         Ajouter un nouvel utilisateur
     </div>
 </div>
+$if str=='NotUniqueEmail':
+    <div class="alert alert-danger">
+      <strong>Error!</strong> The e-mail you provide is not unique.
+    </div>
 
 <div class="content-box-large box-with-header">
     $if user:
