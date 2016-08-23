@@ -7,7 +7,7 @@ DB_FILE = "ingifet.db"
 
 CONSUMPTION_UNIT = 0.65 #en euros
 
-APP_URL = "https://cafet.example.com"
+APP_URL = "http:/www.cafet.example.com/"
 
 MAIL_ADDRESS = "cafet@example.com"
 

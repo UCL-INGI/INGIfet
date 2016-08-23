@@ -118,9 +118,11 @@ class credit:
 
         if not form.validates():
             return render.credit(user, form)
+        #problem here
+        amount = str(form.d.amount).replace(',','.',1)
 
-        Operation.new(user_id=id, amount=form.d.amount, date=datetime.datetime.now()).save()
-        user.balance += float(form.d.amount)
+        Operation.new(user_id=id, amount=amount, date=datetime.datetime.now()).save()
+        user.balance += float(amount)
         user.save()
 
         raise web.seeother('/')
