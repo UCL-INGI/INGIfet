@@ -64,7 +64,7 @@ class edit_user:
         elif rfid:
             form.fill(rfid=rfid)
 
-        return render.edit_user(form, user)
+        return render.edit_user(form, user,"")
 
     def POST(self, id=None):
         form = UserForm()
@@ -73,7 +73,11 @@ class edit_user:
             user = get_object_or_404(User, id=id)
 
         if not form.validates():
-            return render.edit_user(form, user)
+            return render.edit_user(form, user,"")
+
+        for u in User.all():
+            if form.d.email == u.email:
+                return render.edit_user(form, user, 'NotUniqueEmail')
 
         if user is None:
             user = User.new()
