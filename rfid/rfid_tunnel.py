@@ -6,7 +6,10 @@ BASE_URL = 'http://localhost:8080/{id}'
 clf = nfc.ContactlessFrontend('usb')
 
 def beep(r=1):
-    cmd = 'beep -r {} -d 200 -f 800'.format(r)
+    if r == 1:
+        cmd = 'beep -f 659 -l 200 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 400 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 400 -D 25 -n -f 659 -l 200 -D 25 -n -f 783 -l 200 -D 25 -n -f 523 -l 200 -D 25 -n -f 587 -l 200 -D 25 -n -f 659 -l 400 -D 25'
+    else:
+        cmd = 'beep -r {} -d 200 -f 800'.format(r)
     call(shlex.split(cmd))
 
 def nfc_tag_connected(tag):
