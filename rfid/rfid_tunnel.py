@@ -7,7 +7,7 @@ clf = nfc.ContactlessFrontend('usb')
 
 def beep(r=1):
     if r == 1:
-        cmd = 'beep -f 800 -l 200 -D 300 -n -f 659 -l 200 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 400 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 400 -D 25 -n -f 659 -l 200 -D 25 -n -f 783 -l 200 -D 25 -n -f 523 -l 200 -D 25 -n -f 587 -l 200 -D 25 -n -f 659 -l 400 -D 25'
+        cmd = 'beep -f 800 -l 200 -D 300 -n -f 392 -l 350 -D 100 -n -f 392 -l 350 -D 100 -n -f 392 -l 350 -D 100 -n -f 311.1 -l 250 -D 100 -n -f 466.2 -l 25 -D 100 -n -f 392 -l 350 -D 100 -n -f 311.1 -l 250 -D 100 -n -f 466.2 -l 25 -D 100 -n -f 392 -l 700 -D 100'
     else:
         cmd = 'beep -r {} -d 200 -f 800'.format(r)
     call(shlex.split(cmd))
