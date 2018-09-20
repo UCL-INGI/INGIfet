@@ -9,7 +9,11 @@ def urlize(uri):
     return urllib.parse.urljoin(APP_URL, uri)
 
 def float2str(f):
-    return "{:.2f}".format(f)
+    if(type(f) is float):
+        f = round(f,2)
+        return repr(f)
+    else:
+        return str(f)
 
 def get_object_or_404(model, **kwargs):
     try:
