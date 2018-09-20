@@ -76,9 +76,8 @@ class edit_user:
             return render.edit_user(form, user,"")
         #check only if email changed
         if user.email != form.d.email:
-            for u in User.all():
-                if form.d.email == u.email:
-                    return render.edit_user(form, user, 'NotUniqueEmail')
+            if User.get(email=form.d.email) is not None:
+                return render.edit_user(form, user, 'NotUniqueEmail')
 
         if user is None:
             user = User.new()
