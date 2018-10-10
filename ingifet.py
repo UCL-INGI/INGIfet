@@ -141,8 +141,12 @@ class consume:
 
         if not form.validates():
             raise web.seeother('/users/{}'.format(user.id))
-
-        amount = settings.CONSUMPTION_UNIT*int(form.d.units)
+        try:
+            amount = settings.CONSUMPTION_UNIT*int(form.d.units)
+        except ValueError as e:
+            active_users = User.filter(active=True, order_by='firstname')
+            inactive_users = User.filter(active=False, order_by='firstname')
+            return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(),"Something goes wrong with datas you entered:"+str(form.d.units))
         Operation.new(user_id=id, amount=-amount, date=datetime.datetime.now()).save()
         user.balance -= float(amount)
         user.save()
