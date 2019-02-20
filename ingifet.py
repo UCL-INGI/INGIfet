@@ -81,7 +81,12 @@ class edit_user:
         else:
             # check only if email changed
             if user.email != form.d.email:
-                if User.get(email=form.d.email) is not None:
+                u= None
+                try:
+                    u =  User.get(email=form.d.email)
+                except Entry.DoesNotExist:
+                    pass
+                if u is not None:
                     return render.edit_user(form, user, 'NotUniqueEmail')
 
         user.firstname = form.d.firstname
