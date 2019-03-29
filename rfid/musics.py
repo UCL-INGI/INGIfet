@@ -12,5 +12,8 @@ musics = [music_it_s_a_small_world, music_imperial_march]
 # addition of time specific musics and condition to add them
 music_chrismas_song = '-f 800 -l 200 -D 300 -n -f 659 -l 200 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 400 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 200 -D 25 -n -f 659 -l 400 -D 25 -n -f 659 -l 200 -D 25 -n -f 783 -l 200 -D 25 -n -f 523 -l 200 -D 25 -n -f 587 -l 200 -D 25 -n -f 659 -l 400 -D 25'
 
-if (datetime.datetime.now().month == 12):
-    musics.append(music_chrismas_song)
+def get_musics():
+    if (datetime.datetime.now().month == 12):
+        musics + [music_chrismas_song]
+    else:
+        musics

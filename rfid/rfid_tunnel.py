@@ -1,13 +1,14 @@
 import nfc, urllib2, binascii, traceback, datetime, time, os, shlex, random
 from subprocess import call
-from musics import musics
+from musics import get_musics
 
 BASE_URL = 'http://localhost:8080/{id}'
 clf = nfc.ContactlessFrontend('usb')
 
 def beep(r=1):
     if r == 1:
-        cmd = 'beep ' + musics[random.randint(0,len(musics)-1)]
+        mus = get_musics()
+        cmd = 'beep ' + mus[random.randint(0,len(musics)-1)]
     else:
         cmd = 'beep -r {} -d 200 -f 800'.format(r)
     call(shlex.split(cmd))
