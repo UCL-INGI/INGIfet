@@ -14,6 +14,6 @@ music_chrismas_song = '-f 800 -l 200 -D 300 -n -f 659 -l 200 -D 25 -n -f 659 -l 
 
 def get_musics():
     if (datetime.datetime.now().month == 12):
-        musics + [music_chrismas_song]
+        return musics + [music_chrismas_song]
     else:
-        musics
+        return musics
