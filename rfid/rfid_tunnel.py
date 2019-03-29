@@ -8,7 +8,7 @@ clf = nfc.ContactlessFrontend('usb')
 def beep(r=1):
     if r == 1:
         mus = get_musics()
-        cmd = 'beep ' + mus[random.randint(0,len(musics)-1)]
+        cmd = 'beep ' + mus[random.randint(0,len(mus)-1)]
     else:
         cmd = 'beep -r {} -d 200 -f 800'.format(r)
     call(shlex.split(cmd))
