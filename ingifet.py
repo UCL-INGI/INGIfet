@@ -224,8 +224,10 @@ class mail:
                                solde = float2str(u.balance), 
                                prenom = u.firstname, 
                                nom = u.lastname)
-
-            web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
+            try:
+                web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
+            except:
+                pass
 
         if userside:
             return render_no_layout.consume('BALANCE', u)
