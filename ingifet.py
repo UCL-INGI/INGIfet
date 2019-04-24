@@ -27,7 +27,7 @@ urls = (
     '/credit/(\d+)', 'credit',
     '/consume/(\d+)', 'consume',
     '/qr/(\d+)', 'qr',
-    '/sheet', 'sheet',
+    '/sheet/(\d+)', 'sheet',
     '/rfid/(\w+)', 'rfid',
     '/mail/(\d+)', 'mail',
     '/mail', 'mail',
@@ -43,7 +43,7 @@ class users:
     def GET(self):
         active_users = User.filter(active=True, order_by='firstname')
         inactive_users = User.filter(active=False, order_by='firstname')
-        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm())
+        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(),"")
 
 class user:
     def GET(self, id):
@@ -169,8 +169,10 @@ class qr:
         return buf.getvalue()
 
 class sheet:
-    def GET(self):
+    def GET(self,no_qr):
         users = User.filter(active=True, order_by='firstname')
+        if int(no_qr) == 1:
+            return web.template.render('templates/', globals=template_globals).no_qr_sheet(users)
         return web.template.render('templates/', globals=template_globals).sheet(users)
 
 
@@ -215,6 +217,7 @@ class mail:
             tpl = default_tpl
 
         userside = web.input(u=0).u != 0 # used to check if the mail is coming from a QR scan
+        mails =[]
         for u in users:
             utpl = default_tpl
             if u.balance < 0 and not userside:
@@ -227,8 +230,15 @@ class mail:
             try:
                 web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
             except:
-                pass
+                mails.append(u.email)
 
+
+        if len(mails) > 0:
+            active_users = User.filter(active=True, order_by='firstname')
+            inactive_users = User.filter(active=False, order_by='firstname')
+            return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(), "Something went "
+                                                                                                 "wrong with :"
+                                + str(mails))
         if userside:
             return render_no_layout.consume('BALANCE', u)
 

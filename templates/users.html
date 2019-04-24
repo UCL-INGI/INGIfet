@@ -1,4 +1,4 @@
-$def with (active_users, inactive_users, credit_form, consume_form)
+$def with (active_users, inactive_users, credit_form, consume_form,feedback)
 
 <div class="content-box-header">
     <div class="panel-title">Utilisateurs</div>
@@ -9,6 +9,10 @@ $def with (active_users, inactive_users, credit_form, consume_form)
         <a href="/mail"><i class="glyphicon glyphicon-envelope"></i> Envoyer le solde à tous les utilisateurs actifs</a>
     </div>
 </div>
+$if feedback is not "":
+    <div class="alert alert-danger">
+      <strong>Error!</strong> $feedback
+    </div>
 
 <div class="content-box-large box-with-header">
 
@@ -25,16 +29,16 @@ $def with (active_users, inactive_users, credit_form, consume_form)
         </thead>
         <tbody>
         $for user in active_users:
-            <tr>
+            <tr id="$user.id">
                 <td><a href="/users/$user.id">$user.firstname $user.lastname </a></th>
                 <td>$float2str(user.balance) €</td>
                 <td>
-                    <form class="form-inline" method="post" action="/consume/$user.id">
+                    <form class="form-inline" method="post" action="/consume/$user.id#$user.id">
                         Nombre : $:consume_form.units.render()  <input type="submit" value="Envoyer"/>
                     </form>
                 </td>
                 <td>
-                    <form class="form-inline" method="post" action="/credit/$user.id">
+                    <form class="form-inline" method="post" action="/credit/$user.id#$user.id">
                         Montant : $:credit_form.amount.render() € <input type="submit" value="Créditer"/>
                     </form>
                 </td>
@@ -58,16 +62,16 @@ $def with (active_users, inactive_users, credit_form, consume_form)
         </thead>
         <tbody>
         $for user in inactive_users:
-            <tr>
+            <tr id="$user.id">
                 <td><a href="/users/$user.id">$user.firstname $user.lastname </a></th>
                 <td>$float2str(user.balance) €</td>
                 <td>
-                    <form class="form-inline" method="post" action="/consume/$user.id">
+                    <form class="form-inline" method="post" action="/consume/$user.id#$user.id">
                         Nombre : $:consume_form.units.render()  <input type="submit" value="Envoyer"/>
                     </form>
                 </td>
                 <td>
-                    <form class="form-inline" method="post" action="/credit/$user.id">
+                    <form class="form-inline" method="post" action="/credit/$user.id#$user.id">
                         Montant : $:credit_form.amount.render() € <input type="submit" value="Créditer"/>
                     </form>
                 </td>
@@ -80,3 +84,5 @@ $def with (active_users, inactive_users, credit_form, consume_form)
 
 
 </div>
+
+
