@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# coding: utf-8
 
 import web, datetime, pyqrcode, pickle
 from utils import datetime2str, get_object_or_404, float2str, urlize
@@ -34,16 +34,18 @@ urls = (
     '/mail/template', 'mail_tpl',
 )
 
-template_globals = {'datetime2str':datetime2str, 'float2str':float2str, 'urlize': urlize, 'str': str}
+template_globals = {'datetime2str': datetime2str, 'float2str': float2str, 'urlize': urlize, 'str': str}
 
 render = web.template.render('templates/', globals=template_globals, base='base')
 render_no_layout = web.template.render('templates/', globals=template_globals)
+
 
 class users:
     def GET(self):
         active_users = User.filter(active=True, order_by='firstname')
         inactive_users = User.filter(active=False, order_by='firstname')
-        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(),"","")
+        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(), "", "")
+
 
 class user:
     def GET(self, id):
@@ -51,6 +53,7 @@ class user:
         operations = Operation.filter(user_id=id, order_by='date DESC')
 
         return render.user(user, operations)
+
 
 class edit_user:
     def GET(self, id=None):
@@ -60,11 +63,12 @@ class edit_user:
         rfid = web.input(rfid=None).rfid
         if id is not None:
             user = get_object_or_404(User, id=id)
-            form.fill(firstname=user.firstname, lastname=user.lastname, email=user.email, rfid=user.rfid, active=user.active)
+            form.fill(firstname=user.firstname, lastname=user.lastname, email=user.email, rfid=user.rfid,
+                      active=user.active)
         elif rfid:
             form.fill(rfid=rfid)
 
-        return render.edit_user(form, user,"")
+        return render.edit_user(form, user, "")
 
     def POST(self, id=None):
         form = UserForm()
@@ -73,7 +77,7 @@ class edit_user:
             user = get_object_or_404(User, id=id)
 
         if not form.validates():
-            return render.edit_user(form, user,"")
+            return render.edit_user(form, user, "")
 
         if user is None:
             user = User.new()
@@ -81,9 +85,9 @@ class edit_user:
         else:
             # check only if email changed
             if user.email != form.d.email:
-                u= None
+                u = None
                 try:
-                    u =  User.get(email=form.d.email)
+                    u = User.get(email=form.d.email)
                 except Entry.DoesNotExist:
                     pass
                 if u is not None:
@@ -98,6 +102,7 @@ class edit_user:
 
         raise web.seeother('/users/{}'.format(user.id))
 
+
 class user_rfid:
     def GET(self, rfid):
         form = UserSelectForm(User.all(order_by='firstname'))()
@@ -106,7 +111,7 @@ class user_rfid:
 
     def POST(self, rfid):
         form = UserSelectForm(User.all(order_by='firstname'))()
- 
+
         if form.validates():
             user_id = form.d.user
             user = get_object_or_404(User, id=user_id)
@@ -117,6 +122,7 @@ class user_rfid:
 
         return render.user_rfid(form, rfid)
 
+
 class credit:
     def POST(self, id):
         user = get_object_or_404(User, id=id)
@@ -124,14 +130,15 @@ class credit:
 
         if not form.validates():
             return render.credit(user, form)
-        #problem here
-        amount = str(form.d.amount).replace(',','.',1)
+        # problem here
+        amount = str(form.d.amount).replace(',', '.', 1)
 
         Operation.new(user_id=id, amount=amount, date=datetime.datetime.now()).save()
         user.balance += float(amount)
         user.save()
 
         raise web.seeother('/')
+
 
 class consume:
     def GET(self, id):
@@ -140,7 +147,6 @@ class consume:
 
         return render_no_layout.consume(form, user)
 
-
     def POST(self, id):
         user = get_object_or_404(User, id=id)
         form = ConsumeForm()
@@ -148,7 +154,7 @@ class consume:
         if not form.validates():
             raise web.seeother('/users/{}'.format(user.id))
 
-        amount = settings.CONSUMPTION_UNIT*int(form.d.units)
+        amount = settings.CONSUMPTION_UNIT * int(form.d.units)
         Operation.new(user_id=id, amount=-amount, date=datetime.datetime.now()).save()
         user.balance -= float(amount)
         user.save()
@@ -157,6 +163,7 @@ class consume:
             return render_no_layout.consume(None, user)
         else:
             raise web.seeother('/')
+
 
 class qr:
     def GET(self, id):
@@ -168,8 +175,9 @@ class qr:
 
         return buf.getvalue()
 
+
 class sheet:
-    def GET(self,no_qr):
+    def GET(self, no_qr):
         users = User.filter(active=True, order_by='firstname')
         if int(no_qr) == 1:
             return web.template.render('templates/', globals=template_globals).no_qr_sheet(users)
@@ -188,21 +196,21 @@ class rfid:
             return "OK"
         except Entry.DoesNotExist:
             body = settings.MAIL_TPL_UNKNOWN_CARD.format(
-                    new_user_url = urlize('/users/add/?rfid={}'.format(id)),
-                    existing_user_url = urlize('/users/rfid/{}'.format(id)),
-                    hour=datetime.datetime.now().strftime('%H:%M'))
+                new_user_url=urlize('/users/add/?rfid={}'.format(id)),
+                existing_user_url=urlize('/users/rfid/{}'.format(id)),
+                hour=datetime.datetime.now().strftime('%H:%M'))
 
             web.sendmail(settings.MAIL_ADDRESS,
-                settings.SECRETARY_MAIL_ADDRESS,
-                '[INGIfet] Carte inconnue {}'.format(id),
-                body)
+                         settings.SECRETARY_MAIL_ADDRESS,
+                         '[INGIfet] Carte inconnue {}'.format(id),
+                         body)
 
             raise web.notfound()
 
 
 class mail:
     def GET(self, id=None):
-        #if id is None, email every active user with his balance
+        # if id is None, email every active user with his balance
         if id is not None:
             users = [get_object_or_404(User, id=id)]
         else:
@@ -216,26 +224,25 @@ class mail:
         except (IOError, pickle.PickleError):
             tpl = default_tpl
 
-        userside = web.input(u=0).u != 0 # used to check if the mail is coming from a QR scan
-        mails =[]
+        userside = web.input(u=0).u != 0  # used to check if the mail is coming from a QR scan
+        mails = []
         correct_mails = []
         for u in users:
             utpl = default_tpl
             if u.balance < 0 and not userside:
                 utpl = tpl
-            
-            body = utpl.format(apayer = float2str(-u.balance if u.balance <0 else 0), 
-                               solde = float2str(u.balance), 
-                               prenom = u.firstname, 
-                               nom = u.lastname)
+
+            body = utpl.format(apayer=float2str(-u.balance if u.balance < 0 else 0),
+                               solde=float2str(u.balance),
+                               prenom=u.firstname,
+                               nom=u.lastname)
             try:
                 web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
                 correct_mails.append(u.email)
             except:
                 mails.append(u.email)
 
-
-        if len(mails) > 0:
+        if len(mails) > 0 or len(correct_mails) > 0:
             active_users = User.filter(active=True, order_by='firstname')
             inactive_users = User.filter(active=False, order_by='firstname')
             return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(), mails,
@@ -244,6 +251,7 @@ class mail:
             return render_no_layout.consume('BALANCE', u)
 
         raise web.seeother('/')
+
 
 class mail_tpl:
     def GET(self):
@@ -270,8 +278,6 @@ class mail_tpl:
         raise web.seeother('/mail/template')
 
 
-
 if __name__ == "__main__":
     app = web.application(urls, globals())
     app.run()
-
