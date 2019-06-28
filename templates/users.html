@@ -1,4 +1,4 @@
-$def with (active_users, inactive_users, credit_form, consume_form,feedback)
+$def with (active_users, inactive_users, credit_form, consume_form,feedback_error,feedback_success)
 
 <div class="content-box-header">
     <div class="panel-title">Utilisateurs</div>
@@ -9,9 +9,13 @@ $def with (active_users, inactive_users, credit_form, consume_form,feedback)
         <a href="/mail"><i class="glyphicon glyphicon-envelope"></i> Envoyer le solde à tous les utilisateurs actifs</a>
     </div>
 </div>
-$if feedback is not "":
+$if len(feedback_error)>0:
     <div class="alert alert-danger">
-      <strong>Error!</strong> $feedback
+      <strong>Error!</strong> Something went wrong with : $feedback_error
+    </div>
+$if len(feedback_success)>0:
+    <div class="alert alert-success">
+      <strong>Success!</strong> Correctly send to: $feedback_success
     </div>
 
 <div class="content-box-large box-with-header">

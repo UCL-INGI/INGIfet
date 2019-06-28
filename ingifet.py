@@ -43,7 +43,7 @@ class users:
     def GET(self):
         active_users = User.filter(active=True, order_by='firstname')
         inactive_users = User.filter(active=False, order_by='firstname')
-        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(),"")
+        return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(),"","")
 
 class user:
     def GET(self, id):
@@ -218,6 +218,7 @@ class mail:
 
         userside = web.input(u=0).u != 0 # used to check if the mail is coming from a QR scan
         mails =[]
+        correct_mails = []
         for u in users:
             utpl = default_tpl
             if u.balance < 0 and not userside:
@@ -229,6 +230,7 @@ class mail:
                                nom = u.lastname)
             try:
                 web.sendmail(settings.MAIL_ADDRESS, u.email, 'Your INGI cafetaria balance', body)
+                correct_mails.append(u.email)
             except:
                 mails.append(u.email)
 
@@ -236,9 +238,8 @@ class mail:
         if len(mails) > 0:
             active_users = User.filter(active=True, order_by='firstname')
             inactive_users = User.filter(active=False, order_by='firstname')
-            return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(), "Something went "
-                                                                                                 "wrong with :"
-                                + str(mails))
+            return render.users(active_users, inactive_users, CreditForm(), ConsumeInlineForm(), mails,
+                                correct_mails)
         if userside:
             return render_no_layout.consume('BALANCE', u)
 
