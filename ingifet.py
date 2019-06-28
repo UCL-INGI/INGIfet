@@ -154,7 +154,7 @@ class consume:
         if not form.validates():
             raise web.seeother('/users/{}'.format(user.id))
 
-        amount = settings.CONSUMPTION_UNIT * int(form.d.units)
+        amount = settings.CONSUMPTION_UNIT * int(float(form.d.units))
         Operation.new(user_id=id, amount=-amount, date=datetime.datetime.now()).save()
         user.balance -= float(amount)
         user.save()
